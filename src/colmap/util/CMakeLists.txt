@@ -49,6 +49,8 @@ COLMAP_ADD_LIBRARY(
         version.h version.cc
     PUBLIC_LINK_LIBS
         Boost::filesystem
+        Boost::algorithm
+        Boost::multiprecision #其它库会用到这个头文件
         Eigen3::Eigen
         glog::glog
         SQLite::SQLite3

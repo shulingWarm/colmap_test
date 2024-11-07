@@ -107,11 +107,11 @@ class AutomaticReconstructionController : public Thread {
 
   void Stop() override;
 
- private:
+ public:
   void Run() override;
   void RunFeatureExtraction();
   void RunFeatureMatching();
-  void RunSparseMapper();
+  virtual void RunSparseMapper();
   void RunDenseMapper();
 
   const Options options_;

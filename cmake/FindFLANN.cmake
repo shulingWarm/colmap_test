@@ -55,6 +55,7 @@ list(APPEND FLANN_CHECK_INCLUDE_DIRS
     /usr/local/include
     /opt/include
     /opt/local/include
+    "E:/lib/vcpkg/packages/flann_x64-windows/include"
 )
 
 list(APPEND FLANN_CHECK_LIBRARY_DIRS
@@ -63,6 +64,8 @@ list(APPEND FLANN_CHECK_LIBRARY_DIRS
     /usr/local/lib
     /opt/lib
     /opt/local/lib
+    "E:/lib/vcpkg/packages/flann_x64-windows/bin"
+    "E:/lib/vcpkg/packages/flann_x64-windows/lib"
 )
 
 find_path(FLANN_INCLUDE_DIRS
@@ -72,7 +75,7 @@ find_path(FLANN_INCLUDE_DIRS
     ${FLANN_CHECK_INCLUDE_DIRS})
 find_library(FLANN_LIBRARIES
     NAMES
-    flann
+    "flann"
     PATHS
     ${FLANN_CHECK_LIBRARY_DIRS})
 

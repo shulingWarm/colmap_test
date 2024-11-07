@@ -56,6 +56,7 @@ list(APPEND LZ4_CHECK_INCLUDE_DIRS
     /usr/local/include
     /opt/include
     /opt/local/include
+    "E:/lib/vcpkg/packages/lz4_x64-windows/include"
 )
 
 list(APPEND LZ4_CHECK_LIBRARY_DIRS
@@ -65,6 +66,7 @@ list(APPEND LZ4_CHECK_LIBRARY_DIRS
     /usr/lib/x86_64-linux-gnu
     /opt/lib
     /opt/local/lib
+    "E:/lib/vcpkg/packages/lz4_x64-windows/lib"
 )
 
 find_path(LZ4_INCLUDE_DIRS

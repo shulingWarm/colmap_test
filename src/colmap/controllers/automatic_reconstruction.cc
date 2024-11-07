@@ -231,6 +231,19 @@ void AutomaticReconstructionController::RunSparseMapper() {
   mapper.Run();
 
   CreateDirIfNotExists(sparse_path);
+  //这个reconstruction_manager下面是可能会有很多个reconstruction实体的
+  // 用get方法可以获取其中的个别实例
+  auto reconstructInstance = reconstruction_manager_->Get(0);
+  //从reconstruction的实体里面获取点列表
+  auto& allPoints = reconstructInstance->Points3D();
+  //遍历每个三维点
+  for (auto& eachPoint : allPoints) {
+      //打印点的x坐标
+    std::cout << eachPoint.second.xyz[0];
+  }
+
+  //获取当前的点列表
+
   reconstruction_manager_->Write(sparse_path);
   option_manager_.Write(JoinPaths(sparse_path, "project.ini"));
 }

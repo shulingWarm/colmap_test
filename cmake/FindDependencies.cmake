@@ -8,7 +8,13 @@ find_package(Boost ${COLMAP_FIND_TYPE} COMPONENTS
              filesystem
              graph
              program_options
-             system)
+             system
+             algorithm
+             heap
+             property_map
+             property_tree
+             multiprecision  # CGAL会间接用到这个
+             )
 
 find_package(Eigen3 ${COLMAP_FIND_TYPE})
 
@@ -18,6 +24,9 @@ find_package(FLANN ${COLMAP_FIND_TYPE})
 find_package(LZ4 ${COLMAP_FIND_TYPE})
 
 find_package(Metis ${COLMAP_FIND_TYPE})
+
+#由于glog里面会用到gflags，试一下在这里先把gflags链接上
+find_package(gflags ${COLMAP_FIND_TYPE})
 
 find_package(Glog ${COLMAP_FIND_TYPE})
 if(DEFINED glog_VERSION_MAJOR)

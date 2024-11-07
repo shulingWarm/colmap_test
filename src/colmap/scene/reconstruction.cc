@@ -574,6 +574,10 @@ void Reconstruction::WriteBinary(const std::string& path) const {
   WriteCamerasBinary(*this, JoinPaths(path, "cameras.bin"));
   WriteImagesBinary(*this, JoinPaths(path, "images.bin"));
   WritePoints3DBinary(*this, JoinPaths(path, "points3D.bin"));
+  //在这里把本体保存成ply数据
+  auto plyData = this->ConvertToPLY();
+  //保存ply
+  WriteBinaryPlyPoints(JoinPaths(path, "points3D.ply"), plyData, false, false);
 }
 
 std::vector<PlyPoint> Reconstruction::ConvertToPLY() const {

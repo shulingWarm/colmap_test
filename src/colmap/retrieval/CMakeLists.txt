@@ -42,6 +42,7 @@ COLMAP_ADD_LIBRARY(
         vote_and_verify.h vote_and_verify.cc
     PUBLIC_LINK_LIBS
         Boost::boost
+        Boost::heap # 为了解决heap相关的头文件找不到的问题
         Eigen3::Eigen
         flann
         lz4
