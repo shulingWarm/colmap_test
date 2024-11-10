@@ -210,7 +210,7 @@ void AutomaticReconstructionController::RunFeatureMatching() {
 
 void AutomaticReconstructionController::RunSparseMapper() {
   const auto sparse_path = JoinPaths(options_.workspace_path, "sparse");
-  if (ExistsDir(sparse_path)) {
+  /*if (ExistsDir(sparse_path)) {
     auto dir_list = GetDirList(sparse_path);
     std::sort(dir_list.begin(), dir_list.end());
     if (dir_list.size() > 0) {
@@ -221,7 +221,7 @@ void AutomaticReconstructionController::RunSparseMapper() {
       }
       return;
     }
-  }
+  }*/
 
   IncrementalMapperController mapper(option_manager_.mapper,
                                      *option_manager_.image_path,
@@ -236,10 +236,35 @@ void AutomaticReconstructionController::RunSparseMapper() {
   auto reconstructInstance = reconstruction_manager_->Get(0);
   //从reconstruction的实体里面获取点列表
   auto& allPoints = reconstructInstance->Points3D();
+  //需要寻找的目标点
+  Eigen::Vector3d targetPoint(0.233348, 0.695772, 5.025670);
   //遍历每个三维点
   for (auto& eachPoint : allPoints) {
-      //打印点的x坐标
-    std::cout << eachPoint.second.xyz[0];
+      //计算当前点坐标到目标的距离
+    auto disVec = targetPoint - eachPoint.second.xyz;
+    //当前点的距离
+    if (disVec.norm() < 0.001) {
+      std::cout << "Find target point" << std::endl;
+      std::cout << eachPoint.second.xyz << std::endl;
+      //获取这个点的obs
+      auto& track = eachPoint.second.track.Elements();
+      //遍历每个相机，打印观察点位置
+      for (auto& eachElement : track){
+          //当前track的图片id
+        auto idImage = eachElement.image_id;
+        //目标图片
+        auto& targetImage = reconstructInstance->Image(idImage);
+        //从图片库里面获取对应的原始图片名
+        std::cout << targetImage.Name() << std::endl;
+        //获取对应图片里面的二维点
+        auto idObs = eachElement.point2D_idx;
+        //从图片里面获取obs的位置
+        auto& point2d = targetImage.Point2D(idObs);
+        //打印二维点的显示位置
+        std::cout << point2d.xy << std::endl;
+      }
+
+    }
   }
 
   //获取当前的点列表
