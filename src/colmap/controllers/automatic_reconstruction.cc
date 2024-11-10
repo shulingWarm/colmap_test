@@ -39,6 +39,7 @@
 #include "colmap/mvs/patch_match.h"
 #include "colmap/util/logging.h"
 #include "colmap/util/misc.h"
+#include "colmap/geometry/triangulation.h"
 
 namespace colmap {
 
@@ -208,6 +209,23 @@ void AutomaticReconstructionController::RunFeatureMatching() {
   active_thread_ = nullptr;
 }
 
+//用于计算打印观察角度的函数
+static void printViewAngle(Eigen::Vector3d point3d,
+    std::vector<Eigen::Vector3d>& cameraList
+){
+  std::cout << "View angles: " << std::endl;
+    //做角度的双层循环
+  for (int id1 = 0; id1 < cameraList.size();++id1) {
+      for (int id2 = id1 + 1; id2 < cameraList.size(); ++id2) {
+            //计算观察角度
+            auto viewAngle = CalculateTriangulationAngle(
+                point3d, cameraList[id1], cameraList[id2]);
+            //打印观察角度
+            std::cout << viewAngle << std::endl;
+      }
+  }
+}
+
 void AutomaticReconstructionController::RunSparseMapper() {
   const auto sparse_path = JoinPaths(options_.workspace_path, "sparse");
   /*if (ExistsDir(sparse_path)) {
@@ -246,6 +264,8 @@ void AutomaticReconstructionController::RunSparseMapper() {
     if (disVec.norm() < 0.001) {
       std::cout << "Find target point" << std::endl;
       std::cout << eachPoint.second.xyz << std::endl;
+      //相机光心的列表，用于计算观察角度的情况
+      std::vector<Eigen::Vector3d> camCenterList;
       //获取这个点的obs
       auto& track = eachPoint.second.track.Elements();
       //遍历每个相机，打印观察点位置
@@ -254,16 +274,11 @@ void AutomaticReconstructionController::RunSparseMapper() {
         auto idImage = eachElement.image_id;
         //目标图片
         auto& targetImage = reconstructInstance->Image(idImage);
-        //从图片库里面获取对应的原始图片名
-        std::cout << targetImage.Name() << std::endl;
-        //获取对应图片里面的二维点
-        auto idObs = eachElement.point2D_idx;
-        //从图片里面获取obs的位置
-        auto& point2d = targetImage.Point2D(idObs);
-        //打印二维点的显示位置
-        std::cout << point2d.xy << std::endl;
+        //把相机光心记录到列表里面
+        camCenterList.push_back(targetImage.ProjectionCenter());
       }
-
+      //打印观察角度的信息
+      printViewAngle(eachPoint.second.xyz, camCenterList);
     }
   }
 
