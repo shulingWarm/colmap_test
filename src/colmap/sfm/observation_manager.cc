@@ -343,7 +343,7 @@ size_t ObservationManager::FilterObservationsWithNegativeDepth() {
 
 size_t ObservationManager::FilterPoints3DWithSmallTriangulationAngle(
     const double min_tri_angle,
-    const std::unordered_set<point3D_t>& point3D_ids) {
+    const std::unordered_set<point3D_t>& point3D_ids, uint32_t requireNum) {
   // Number of filtered points.
   size_t num_filtered = 0;
 
@@ -364,6 +364,8 @@ size_t ObservationManager::FilterPoints3DWithSmallTriangulationAngle(
     // poses in the track. Only delete point if none of the combinations
     // has a sufficient triangulation angle.
     bool keep_point = false;
+    //目前已经找到的符合要求的角度个数
+    uint32_t validAngleNum = 0;
     for (size_t i1 = 0; i1 < point3D.track.Length(); ++i1) {
       const image_t image_id1 = point3D.track.Element(i1).image_id;
 
@@ -384,8 +386,13 @@ size_t ObservationManager::FilterPoints3DWithSmallTriangulationAngle(
             proj_center1, proj_center2, point3D.xyz);
 
         if (tri_angle >= min_tri_angle_rad) {
-          keep_point = true;
-          break;
+          //计数合法的角度数
+          validAngleNum++;
+          if(validAngleNum >= requireNum)
+          {
+              keep_point = true;
+              break;
+          }
         }
       }
 

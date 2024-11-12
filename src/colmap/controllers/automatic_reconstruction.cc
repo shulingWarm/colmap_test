@@ -252,37 +252,41 @@ void AutomaticReconstructionController::RunSparseMapper() {
   //这个reconstruction_manager下面是可能会有很多个reconstruction实体的
   // 用get方法可以获取其中的个别实例
   auto reconstructInstance = reconstruction_manager_->Get(0);
-  //从reconstruction的实体里面获取点列表
-  auto& allPoints = reconstructInstance->Points3D();
-  //需要寻找的目标点
-  Eigen::Vector3d targetPoint(0.233348, 0.695772, 5.025670);
-  //遍历每个三维点
-  for (auto& eachPoint : allPoints) {
-      //计算当前点坐标到目标的距离
-    auto disVec = targetPoint - eachPoint.second.xyz;
-    //当前点的距离
-    if (disVec.norm() < 0.001) {
-      std::cout << "Find target point" << std::endl;
-      std::cout << eachPoint.second.xyz << std::endl;
-      //相机光心的列表，用于计算观察角度的情况
-      std::vector<Eigen::Vector3d> camCenterList;
-      //获取这个点的obs
-      auto& track = eachPoint.second.track.Elements();
-      //遍历每个相机，打印观察点位置
-      for (auto& eachElement : track){
-          //当前track的图片id
-        auto idImage = eachElement.image_id;
-        //目标图片
-        auto& targetImage = reconstructInstance->Image(idImage);
-        //把相机光心记录到列表里面
-        camCenterList.push_back(targetImage.ProjectionCenter());
-      }
-      //打印观察角度的信息
-      printViewAngle(eachPoint.second.xyz, camCenterList);
-    }
-  }
+  ////从reconstruction的实体里面获取点列表
+  //auto& allPoints = reconstructInstance->Points3D();
+  ////需要寻找的目标点
+  //Eigen::Vector3d targetPoint(0.233348, 0.695772, 5.025670);
+  ////遍历每个三维点
+  //for (auto& eachPoint : allPoints) {
+  //    //计算当前点坐标到目标的距离
+  //  auto disVec = targetPoint - eachPoint.second.xyz;
+  //  //当前点的距离
+  //  if (disVec.norm() < 0.001) {
+  //    std::cout << "Find target point" << std::endl;
+  //    std::cout << eachPoint.second.xyz << std::endl;
+  //    //相机光心的列表，用于计算观察角度的情况
+  //    std::vector<Eigen::Vector3d> camCenterList;
+  //    //获取这个点的obs
+  //    auto& track = eachPoint.second.track.Elements();
+  //    //遍历每个相机，打印观察点位置
+  //    for (auto& eachElement : track){
+  //        //当前track的图片id
+  //      auto idImage = eachElement.image_id;
+  //      //目标图片
+  //      auto& targetImage = reconstructInstance->Image(idImage);
+  //      //把相机光心记录到列表里面
+  //      camCenterList.push_back(targetImage.ProjectionCenter());
+  //    }
+  //    //打印观察角度的信息
+  //    printViewAngle(eachPoint.second.xyz, camCenterList);
+  //  }
+  //}
 
-  //获取当前的点列表
+  //获取当前重建的obs管理器
+  ObservationManager manager(*reconstructInstance);
+  //对reconstruction执行角度过滤
+  manager.FilterPoints3DWithSmallTriangulationAngle(2.09,
+      reconstructInstance->Point3DIds(),6);
 
   reconstruction_manager_->Write(sparse_path);
   option_manager_.Write(JoinPaths(sparse_path, "project.ini"));

@@ -98,10 +98,11 @@ class ObservationManager {
   size_t FilterObservationsWithNegativeDepth();
 
   size_t FilterPoints3DWithSmallTriangulationAngle(
-      double min_tri_angle, const std::unordered_set<point3D_t>& point3D_ids);
+      double min_tri_angle, const std::unordered_set<point3D_t>& point3D_ids, uint32_t requireNum = 1);
   size_t FilterPoints3DWithLargeReprojectionError(
       double max_reproj_error,
-      const std::unordered_set<point3D_t>& point3D_ids);
+      const std::unordered_set<point3D_t>& point3D_ids
+);
 
   // Filter images without observations or bogus camera parameters.
   //
