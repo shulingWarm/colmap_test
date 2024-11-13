@@ -290,6 +290,9 @@ void AutomaticReconstructionController::RunSparseMapper() {
 
   reconstruction_manager_->Write(sparse_path);
   option_manager_.Write(JoinPaths(sparse_path, "project.ini"));
+
+  //在这里把保存好的ply操作转换成mesh
+  mvs::PoissonMeshing(mvs::PoissonMeshingOptions(),"E:/temp/south-building/sparse/0/points3D.ply","E:/temp/south-building/sparse/0/mesh.ply");
 }
 
 void AutomaticReconstructionController::RunDenseMapper() {
