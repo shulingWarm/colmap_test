@@ -291,8 +291,12 @@ void AutomaticReconstructionController::RunSparseMapper() {
   reconstruction_manager_->Write(sparse_path);
   option_manager_.Write(JoinPaths(sparse_path, "project.ini"));
 
+  //为了准备调用德劳内mesh的计算，从重建对象里面复制用于生成mesh的数据
+  mvs::meshWithReconstructInstance(reconstructInstance.get(),"E:/temp/south-building/sparse/0/mesh.ply");
+  //调用德劳内mesh
+  // mvs::DenseDelaunayMeshing(mvs::DelaunayMeshingOptions(),"E:\\temp\\south-building","E:/temp/south-building/sparse/0/mesh.ply");
   //在这里把保存好的ply操作转换成mesh
-  mvs::PoissonMeshing(mvs::PoissonMeshingOptions(),"E:/temp/south-building/sparse/0/points3D.ply","E:/temp/south-building/sparse/0/mesh.ply");
+  // mvs::PoissonMeshing(mvs::PoissonMeshingOptions(),"E:/temp/south-building/sparse/0/points3D.ply","E:/temp/south-building/sparse/0/mesh.ply");
 }
 
 void AutomaticReconstructionController::RunDenseMapper() {

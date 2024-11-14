@@ -106,6 +106,10 @@ bool PoissonMeshing(const PoissonMeshingOptions& options,
 
 #if defined(COLMAP_CGAL_ENABLED)
 
+//用于传入重建对象的mesh函数，这样就可以在重建完成之后直接把重建结果读取进来就可以直接生成mesh了
+//Reconstruction传入的重建对象的指针，使用指针是因为懒得在这里包含头文件了
+void meshWithReconstructInstance(void* reconstruction,std::string outputPath);
+
 // Delaunay meshing of sparse and dense COLMAP reconstructions. This is an
 // implementation of the approach described in:
 //

@@ -1014,6 +1014,22 @@ PlyMesh DelaunayMeshing(const DelaunayMeshingOptions& options,
   return mesh;
 }
 
+
+//用于从重建对象里面直接生成mesh
+void meshWithReconstructInstance(void* reconstruction, std::string outputPath)
+{
+    //新建mesh会用到的输入数据
+    DelaunayMeshingInput input_data;
+    //将指针转换为重建mesh的对象
+    Reconstruction& reInstance = *((Reconstruction*)reconstruction);
+    //从重建对象里面读取mesh所需的数据
+    input_data.CopyFromSparseReconstruction(reInstance);
+    //调用重建的计算
+    const auto mesh = DelaunayMeshing(DelaunayMeshingOptions(), input_data);
+    //保存最终的mesh
+    WriteBinaryPlyMesh(outputPath,mesh);
+}
+
 void SparseDelaunayMeshing(const DelaunayMeshingOptions& options,
                            const std::string& input_path,
                            const std::string& output_path) {
