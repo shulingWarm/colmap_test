@@ -111,6 +111,7 @@ int main(int argc, char** argv) {
   commands.emplace_back("image_rectifier", &colmap::RunImageRectifier);
   commands.emplace_back("image_registrator", &colmap::RunImageRegistrator);
   commands.emplace_back("image_undistorter", &colmap::RunImageUndistorter);
+  commands.emplace_back("image_cutter", &colmap::RunImageCutter);
   commands.emplace_back("image_undistorter_standalone",
                         &colmap::RunImageUndistorterStandalone);
   commands.emplace_back("mapper", &colmap::RunMapper);

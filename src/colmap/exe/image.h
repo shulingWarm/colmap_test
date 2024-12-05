@@ -36,4 +36,7 @@ int RunImageRegistrator(int argc, char** argv);
 int RunImageUndistorter(int argc, char** argv);
 int RunImageUndistorterStandalone(int argc, char** argv);
 
+//用于过滤掉图片的选项
+int RunImageCutter(int argc, char** argv);
+
 }  // namespace colmap

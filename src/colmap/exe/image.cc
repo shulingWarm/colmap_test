@@ -201,6 +201,40 @@ int RunImageFilterer(int argc, char** argv) {
   return EXIT_SUCCESS;
 }
 
+int RunImageCutter(int argc, char** argv)
+{
+    //用于测试的稀疏重建结果的路径
+    std::string scene_path = "E:/temp/building_undistort/sparse/0";
+    //新建Reconstruction的实体
+    Reconstruction reconstruction;
+    reconstruction.Read(scene_path);
+    //打印图片的个数
+    std::cout<<"Image count: "<<reconstruction.NumImages()<<std::endl;
+    //遍历所有的图片
+    const auto& allImages = reconstruction.Images();
+    //图片id的列表
+    std::vector<uint32_t> imageIdList;
+    imageIdList.reserve(allImages.size());
+    for(auto& eachImage : allImages)
+    {
+        imageIdList.push_back(eachImage.first);
+    }
+    //从30张之后开始删除图片
+    for(uint32_t idImage=0;idImage<imageIdList.size();++idImage)
+    {
+        if(idImage == 20)
+        {
+            idImage = 50;
+            continue;
+        }
+        //调用图片的解注册
+        reconstruction.DeRegisterImage(imageIdList[idImage]);
+    }
+    //保存重建结果
+    reconstruction.WriteBinary("E:/temp/building_undistort/FilterSparse");
+    return EXIT_SUCCESS;
+}
+
 int RunImageRectifier(int argc, char** argv) {
   std::string input_path;
   std::string output_path;
